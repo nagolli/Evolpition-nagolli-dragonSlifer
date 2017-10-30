@@ -1,0 +1,21 @@
+Proyecto para crear un juego de creacion de ecosistemas, con posibilidad de jugar varias personas en distintos dispositivos.
+El ganador de cada partida será calculado segun la población de sus especies, las funciones queda pediente calcularlas.
+
+Se podrá guardar algunas razas predefinidas por el jugador.
+Algunas mejoras se pueden desbloquear conforme jueguen partidas.
+Habrán logros.
+
+Especies:
+Cada especie tendrá un valor de 100 puntos a invertir en mejoras (si gastase menos tendría un bono a la cantidad inicial liberada)
+Las estadisticas deberían ser reproduccion, supervivencia, combate, caza, defensa, alimentación, tamaño (afecta a caza), entornos (cada uno de los biomas)
+Cada raza se reproduce con prob X teniendo una camada entre Y y Z, aunque podría haber reproduccion asexual, y si son plantas tener bonificadores segun otras razas (polinizacion/fruta/simbiosis)
+Supervivencia basicamente es para evitar que una especie se muera por si sola,
+Combate es un bonificador a caza y defensa
+Caza es un calculo para saber qué puede cazar y cuanto puede cazar
+Defensa es un calculo de cuan dificil de cazar es el animal
+Un animal caza a otro si Caza1+Combate1 > Defensa2+Combate2
+Alimentacion sirve para determinar cuanta comida necesita y de que tipo
+Tamaño: A bote pronto, habrían tamaños: Pequeño, Mediano y Grande, pero no se descarta Gigante, Titanico, Pigmeo o Micro. Por norma general, habrá penalizador a combate segun el tamaño del oponente, y multiplicadores de alimentación segun la diferencia de tamaño, aunque habrán mejoras que lo suplan.
+Entorno: Es un multiplicador a la reproduccion segun el bioma mejorado, si es 0, la reproduccion es 0
+
+Pueden haber más mejoras como parasitismo, habilidades de defensa countereables, pero lo trataremos poco a poco
