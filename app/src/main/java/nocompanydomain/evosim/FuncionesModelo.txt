@@ -68,7 +68,7 @@ ArrayList<Integer> EjecutarCiclo(ArrayList<Integer> poblacion, ArrayList<ArrayLi
 		depredados=0;
 		for(int j=0;j<size;j++)
 		{
-			if(Matriz.get(i).get(j)<0 && i!=j&&poblacion.get(j)>0)
+			if(Matriz.get(i).get(j)!=0 && i!=j&&poblacion.get(j)>0)
 			{
 				depredados++;
 				j=size;
@@ -107,6 +107,7 @@ private ArrayList<Integer> producto(ArrayList<Integer> vector, ArrayList<ArrayLi
 			sum=vector.get(i);
 			for(int j=0;j<size;j++)
 			{
+			int depredados=GetDepredados(j);	
 				if(vector.get(j)>0)
 				{
 					if(i==j)
@@ -123,7 +124,7 @@ private ArrayList<Integer> producto(ArrayList<Integer> vector, ArrayList<ArrayLi
 						sum+=float(vector.get(i))*matriz.get(i).get(j);
 						if(sum<0)
 						{
-							reducirExceso(j,sum*especies.get(i).getAlimDado(),vector);
+							reducirExceso(j,sum*especies.get(i).getAlimDado()/depredados,vector); //Si depredados es 0 esto no es posible
 							sum=0;
 						}
 					}
@@ -131,6 +132,15 @@ private ArrayList<Integer> producto(ArrayList<Integer> vector, ArrayList<ArrayLi
 			vector.set(i,sum);
 			}
 		}
+}
+
+private int GetDepredados(int i)
+{
+	int sum=0;
+	for (int j=0;j<Matriz.size();j++)
+		if(Matriz.get(i).get(j)!=0 && i!=j)
+			sum++;
+	return sum;
 }
 
 //CLASE ESPECIE
