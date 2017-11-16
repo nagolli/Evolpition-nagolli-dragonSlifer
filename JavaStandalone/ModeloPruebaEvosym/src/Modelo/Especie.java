@@ -32,7 +32,7 @@ public class Especie
     private int alimDadoB;		//Indica cuanto alimento da al dar alimento secundario
     private int crecB;			//Indica cuanto crece por simbiosis
 
-    private ArrayList<Integer> Entorno;	//A mayor entorno, menor probabilidad de muerte natural en ese bioma// funcion: =1/((x+1)^3)
+    private final ArrayList<Integer> Entorno;	//A mayor entorno, menor probabilidad de muerte natural en ese bioma// funcion: =1/((x+1)^3)
 
     //Funciones de equilibrio
     private int calculaPuntuacionPorSer()
@@ -73,6 +73,40 @@ public class Especie
     }
 
     //FUNCIONES PARA CREACION
+    public Especie()
+    {
+        this.puntos_rest = 100;
+        this.Entorno = new ArrayList();
+        for (int i = 0; i < 8; i++) //CAMBIAR SI SE AÑADEN ECOSISTEMAS, ACTUALMENTE 8
+        {
+            Entorno.add(0);
+        }
+        this.Mejoras = new ArrayList();
+        this.Flags = new ArrayList();
+        Flags.ensureCapacity(256);
+        for (int i = 0; i < 256; i++) //CAMBIAR SI SE EXCEDEN, 256 ocupa 1 byte
+        {
+            Entorno.add(0);
+        }
+        probReproduccion = 5;
+        camada = 1;
+
+        combate = 0;
+        caza = 0;
+        defensa = 0;
+
+        tamano = 5;
+        alimRequerido = 10;
+        alimDado = 10;
+        alimDadoB = 0;
+        crecB = 0;
+    }
+
+    public void setNombre(String nombre)
+    {
+        this.nombre = nombre;
+    }
+
     public boolean addMejora(Mejora mejora)
     {
         if (mejora.sumarDatos(this)) {
@@ -94,6 +128,13 @@ public class Especie
         return false;
     }
 
+    public void finEditar()
+    {
+        alimRequerido *= tamano;
+        alimDado *= tamano;
+        alimDadoB *= tamano;
+    }
+    
     //FUNCIONES PARA MODELO
     /*
     *	Funcion que calcula el desarrollo de la especie en un bioma sin interaccion de otras especies
@@ -150,9 +191,9 @@ public class Especie
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private boolean getFlagsOmnivoro() 
+    private boolean getFlagsOmnivoro()
     {
-        return (getFlagsCazador()&&getFlagsHervivoro());
+        return (getFlagsCazador() && getFlagsHervivoro());
     }
 
     /*
@@ -182,6 +223,59 @@ public class Especie
         }
     }
 
+    public String getNombre()
+    {
+        return nombre;
+    }
+
+    public int getPuntos_rest()
+    {
+        return puntos_rest;
+    }
+
+    public int getProbReproduccion()
+    {
+        return probReproduccion;
+    }
+
+    public int getCamada()
+    {
+        return camada;
+    }
+
+    public int getCombate()
+    {
+        return combate;
+    }
+
+    public int getCaza()
+    {
+        return caza;
+    }
+
+    public int getDefensa()
+    {
+        return defensa;
+    }
+
+    public String getTamano()
+    {
+        switch (tamano) {
+            case 5:
+                return "Mediano";
+            case 4:
+                return "Pequeño";
+            case 6:
+                return "Grande";
+        }
+        return "";
+    }
+
+    public int getCrecB()
+    {
+        return crecB;
+    }
+
     /*
     * Otros getters
      */
@@ -209,7 +303,7 @@ public class Especie
 
     /*
     *   Modifiers
-    */
+     */
     public void RestPuntos_rest(int puntos_rest)
     {
         this.puntos_rest -= puntos_rest;
@@ -274,4 +368,5 @@ public class Especie
     {
         this.Entorno.set(i, valor + this.Entorno.get(i));
     }
+
 }
