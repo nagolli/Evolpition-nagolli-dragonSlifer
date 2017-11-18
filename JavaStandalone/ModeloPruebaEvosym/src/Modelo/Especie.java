@@ -8,7 +8,7 @@ package Modelo;
 import java.util.ArrayList;
 
 /**
- *
+ * Clase especie, representa una especie y sus parametros
  * @author Ignacio
  */
 public class Especie
@@ -16,7 +16,7 @@ public class Especie
 
     private String nombre;
     private ArrayList<Mejora> Mejoras;	    //Listado de mejoras adquiridas	
-    private int puntos_rest;		    //Puntos para gastar en mejoras
+    private int puntosRest;		    //Puntos para gastar en mejoras
     private ArrayList<Boolean> Flags;	    //Marcadores especiales de mejoras //FLAG 0 no se usa
 
     private int probReproduccion;	//Probabilidad de reproduccion
@@ -35,6 +35,11 @@ public class Especie
     private final ArrayList<Integer> Entorno;	//A mayor entorno, menor probabilidad de muerte natural en ese bioma// funcion: =1/((x+1)^3)
 
     //Funciones de equilibrio
+    /**
+     * Calcula la puntuacion dada por esta especie
+     *
+     * @return valor
+     */
     private float calculaPuntuacionPorSer()
     {
         float alimentacion = 1f;
@@ -50,8 +55,7 @@ public class Especie
         if (getFlagsOmnivoro()) {
             alimentacion -= 2f;
         }
-        if(getFlagsAutotrofo())
-        {
+        if (getFlagsAutotrofo()) {
             alimentacion /= 10f;
         }
         switch (tamano) {
@@ -68,22 +72,38 @@ public class Especie
         }
     }
 
+    /**
+     * Devuelve la puntuación de esta especie dada una población
+     *
+     * @param poblacion poblacion de la especie
+     * @return puntuacion de la especie
+     */
     int getPuntuacion(int poblacion)
     {
-        return (int)(poblacion * calculaPuntuacionPorSer());
+        return (int) (poblacion * calculaPuntuacionPorSer());
     }
 
+    /**
+     * Determina la poblacion inicial de la especie
+     *
+     * @param bioma si su valor de entorno es 0 la poblacion inicial será 0.
+     * @return cantidad inicial
+     */
     int getPoblacionInicial(int bioma)
     {
-        if(Entorno.get(bioma)<=0)
+        if (Entorno.get(bioma) <= 0) {
             return 0;
-        return (int)((10000 + (puntos_rest * 100)) / calculaPuntuacionPorSer());
+        }
+        return (int) ((10000 + (puntosRest * 100)) / calculaPuntuacionPorSer());
     }
 
     //FUNCIONES PARA CREACION
+    /**
+     * Inicializa la especie con todas las constantes
+     */
     public Especie()
     {
-        this.puntos_rest = 100;
+        this.puntosRest = 100;
         this.Entorno = new ArrayList();
         for (int i = 0; i < 8; i++) //CAMBIAR SI SE AÑADEN ECOSISTEMAS, ACTUALMENTE 8
         {
@@ -108,13 +128,25 @@ public class Especie
         alimDado = 10;
         alimDadoB = 0;
         crecB = 0;
+        this.nombre = "UNNAMED" + Math.random() % 10000;
     }
 
+    /**
+     * Ajusta el nombre de la especie
+     *
+     * @param nombre nombre que tendrá la especie
+     */
     public void setNombre(String nombre)
     {
         this.nombre = nombre;
     }
 
+    /**
+     * Añade una mejora a la especie
+     *
+     * @param mejora mejora que se le va a añadir
+     * @return Falso si no ha podido añadir la mejora
+     */
     public boolean addMejora(Mejora mejora)
     {
         if (mejora.sumarDatos(this)) {
@@ -124,6 +156,13 @@ public class Especie
         return false;
     }
 
+    /**
+     * Quita una mejora a la especie, solo quita una en caso de haber multiples
+     * de la misma
+     *
+     * @param mejora mejora que se le va a quitar
+     * @return Falso si no tiene esa mejora
+     */
     public boolean removeMejora(Mejora mejora)
     {
         for (int i = 0; i < Mejoras.size(); i++) {
@@ -136,32 +175,44 @@ public class Especie
         return false;
     }
 
+    /**
+     * Aplica funciones finales a la especie, principalmente para ajustar
+     * formulas con operaciones finales despues de haber editado
+     */
     public void finEditar()
     {
         alimRequerido *= tamano;
         alimDado *= tamano;
         alimDadoB *= tamano;
     }
-    
+
     //FUNCIONES PARA MODELO
-    /*
-    *	Funcion que calcula el desarrollo de la especie en un bioma sin interaccion de otras especies
+    /**
+     * Funcion que calcula el desarrollo de la especie en un bioma sin
+     * interaccion de otras especies
+     *
+     * @param bioma identificador de bioma en el que se encuentra
+     * @return valor
      */
     float GetCrecimiento(int bioma)
     {
-       if(Entorno.get(bioma)<=0)
+        if (Entorno.get(bioma) <= 0) {
             return 0;
-        else
-            return ((float) probReproduccion * (float) camada / 100f + 1f - 1f / (float)((Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1)));
+        } else {
+            return ((float) probReproduccion * (float) camada / 100f + 1f - 1f / (float) ((Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1)));
+        }
     }
 
-    /*
-*	Funcion que calcula la tasa de depredacion de una especie sobre otra, un valor positivo es que en vez de depredar, beneficia
+    /**
+     * Funcion que calcula la tasa de depredacion de una especie sobre otra
+     *
+     * @param e2 especie a la cual esta depredando
+     * @return valor, si es positivo beneficia a la otra especie
      */
     float Depredar(Especie e2)
     {
         if (this.getFlagsSimbiosis(e2)) {
-            return (float) ( (float)(e2.alimDadoB)* (float)(e2.crecB)/100 / this.alimRequerido);
+            return (float) ((float) (e2.alimDadoB) * (float) (e2.crecB) / 100 / this.alimRequerido);
         }
         /*
         System.out.println(nombre+" a "+e2.nombre);
@@ -169,81 +220,152 @@ public class Especie
         System.out.println("Bono por combate:"+(this.combate + this.caza ));
         System.out.println("Penal por defensa:"+(e2.combate + e2.defensa));
         System.out.println("Otros:"+(this.getFlagsCazaManada(e2)));
-        */
+         */
         if (this.getFlagsDepredar(e2) && (this.getVariacionTamano(e2) + this.combate - e2.combate + this.caza - e2.defensa + this.getFlagsCazaManada(e2)) > 0) {
-            return (float)(-this.alimRequerido) / (float)(e2.alimDado);
+            return (float) (-this.alimRequerido) / (float) (e2.alimDado);
         }
         return 0;
     }
 
+    /**
+     * Obtiene el valor de diferencia de tamaño entre especies para depredacion
+     *
+     * @param e2 segunda especie
+     * @return valor de dificultad de caza
+     */
     private int getVariacionTamano(Especie e2)
     {
-       int aux=0;
-       if(this.getFlag(13))
-           if((this.getTamanoN()-e2.getTamanoN())==1)
-               return 5;
-       if(this.getFlag(15))
-           if((this.getTamanoN()-e2.getTamanoN())<-1)
-               return 5*(e2.getTamanoN()-this.getTamanoN())-5;
-       aux+= -Math.abs(5 * (this.tamano - e2.tamano));
-       return aux;
+        int aux = 0;
+        if (this.getFlag(13)) {
+            //La presa es menor en excatamente 1?
+            if ((this.getTamanoN() - e2.getTamanoN()) == 1) {
+                return 5;
+            }
+        }
+        if (this.getFlag(15)) {
+            //La presa es al menos dos veces mayor?
+            if ((this.getTamanoN() - e2.getTamanoN()) < -1) {
+                return 5 * (e2.getTamanoN() - this.getTamanoN()) - 5;
+            }
+        }
+        aux += -Math.abs(5 * (this.tamano - e2.tamano));
+        return aux;
     }
-    
+
     /*
     *   Getters de Flags
      */
+    /**
+     * Esta especie se beneficia de alguna simbiosis?
+     *
+     * @return Verdadero si es cierto
+     */
     private boolean getFlagsSimbiosis() //Tiene alguna simbiosis?
     {
-        if(Flags.get(3)||Flags.get(6))
+        if (Flags.get(3) || Flags.get(6)) {
             return true;
+        }
         return false;
     }
 
+    /**
+     * Esta especie depreda a la segunda?
+     *
+     * @param e2 especie depredada
+     * @return Verdadero si es cierto
+     */
     private boolean getFlagsDepredar(Especie e2) //Esta especie depreda a la otra
     {
-        if(Flags.get(9)&&e2.getFlag(1))
+        //No resiste el veneno y Venenoso
+        if (!Flags.get(17) && e2.getFlag(16)) {
+            return false;
+        }
+        //Hervivoro y Vegetal
+        if (Flags.get(9) && e2.getFlag(1)) {
             return true;
-        if(Flags.get(8)&&e2.getFlag(2))
+        }
+        //Carnivoro y Animal
+        if (Flags.get(8) && e2.getFlag(2)) {
             return true;
+        }
         return false;
     }
+
+    /**
+     * Esta criatura es autotrofa?
+     *
+     * @return Verdadero si es cierto
+     */
     boolean getFlagsAutotrofo() //Esta especie sobrevive por si misma?
     {
-        if(Flags.get(14))
+        if (Flags.get(14)) {
             return true;
+        }
         return false;
     }
 
+    /**
+     * Esta especie se alimenta de una simbiosis de la segunda?
+     *
+     * @param e2 segunda especie
+     * @return Verdadero si es cierto
+     */
     private boolean getFlagsSimbiosis(Especie e2) //Tiene simbiosis con e2?
     {
-        if(Flags.get(4)&&e2.getFlag(3))
+        if (Flags.get(4) && e2.getFlag(3)) {
             return true;
-        if(Flags.get(7)&&e2.getFlag(6))
+        }
+        if (Flags.get(7) && e2.getFlag(6)) {
             return true;
+        }
         return false;
     }
 
+    /**
+     * Esta especie es cazadora?
+     *
+     * @return Verdadero si es cierto
+     */
     private boolean getFlagsCazador() //Esta especie se alimenta de animales
     {
-        if(Flags.get(8))
+        if (Flags.get(8)) {
             return true;
+        }
         return false;
     }
-    
+
+    /**
+     * Esta especie es buena cazando manadas y la depredada forma manadas?
+     *
+     * @param e2 Especie depredada
+     * @return Verdadero si es cierto
+     */
     private int getFlagsCazaManada(Especie e2) //Esta especie se alimenta de animales
     {
-        if(Flags.get(12)&&e2.getFlag(11))
+        if (Flags.get(12) && e2.getFlag(11)) {
             return 3;
+        }
         return 0;
     }
 
+    /**
+     * Esta especie es hervivora?
+     *
+     * @return Verdadero si es cierto
+     */
     private boolean getFlagsHervivoro() //Esta especie se alimenta de plantas
     {
-        if(Flags.get(9))
+        if (Flags.get(9)) {
             return true;
+        }
         return false;
     }
 
+    /**
+     * Esta especie es carnivora y hervivora?
+     *
+     * @return Verdadero si es cierto
+     */
     private boolean getFlagsOmnivoro()
     {
         return (getFlagsCazador() && getFlagsHervivoro());
@@ -252,11 +374,19 @@ public class Especie
     /*
     *   Getters estandar
      */
+    /**
+     *
+     * @return
+     */
     int getAlimRequerido()
     {
         return this.alimRequerido;
     }
 
+    /**
+     *
+     * @return
+     */
     ArrayList<Boolean> getFlags()
     {
         return this.Flags;
@@ -264,9 +394,14 @@ public class Especie
 
     int getPuntosRest()
     {
-        return this.puntos_rest;
+        return this.puntosRest;
     }
 
+    /**
+     *
+     * @param caza
+     * @return
+     */
     float getAlimDado(boolean caza)
     {
         if (caza) {
@@ -276,42 +411,65 @@ public class Especie
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNombre()
     {
         return nombre;
     }
 
-    public int getPuntos_rest()
-    {
-        return puntos_rest;
-    }
-
+    /**
+     *
+     * @return
+     */
     public int getProbReproduccion()
     {
         return probReproduccion;
     }
 
+    /**
+     *
+     * @return
+     */
     public float getCamada()
     {
         return camada;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getCombate()
     {
         return combate;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getCaza()
     {
         return caza;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getDefensa()
     {
         return defensa;
     }
 
-    public String getTamano()
+    /**
+     *
+     * @return
+     */
+    public String getTamanoS()
     {
         switch (tamano) {
             case 5:
@@ -326,23 +484,45 @@ public class Especie
         return "";
     }
 
+    /**
+     * Devuelve la probabilidad de criar debido a una simbiosis
+     *
+     * @return valor
+     */
     public int getCrecB()
     {
         return crecB;
     }
-    
+
+    /**
+     * Devuelve el estado del flag
+     *
+     * @param i numero de flag comprobado
+     * @return valor del flag
+     */
     private Boolean getFlag(int i)
     {
         return Flags.get(i);
     }
 
-        private int getTamanoN()
+    /**
+     * Devuelve el valor numerico del tamaño
+     *
+     * @return valor
+     */
+    public int getTamanoN()
     {
         return tamano;
     }
-    
+
     /*
     * Otros getters
+     */
+    /**
+     * Cuenta cuantas mejoras se han adquirido que aporten un flag
+     *
+     * @param flag numero de flag a contar
+     * @return numero de mejoras con ese flag adquiridas
      */
     int contarMejorasConFlag(int flag)
     {
@@ -355,6 +535,12 @@ public class Especie
         return cont;
     }
 
+    /**
+     * Devuelve cuantas veces se ha adquirido una mejora
+     *
+     * @param mejora Mejora a buscar
+     * @return cantidad de veces
+     */
     int getCantMejora(Mejora mejora)
     {
         int cont = 0;
@@ -369,79 +555,143 @@ public class Especie
     /*
     *   Modifiers
      */
-    public void RestPuntos_rest(int puntos_rest)
+    /**
+     * Quita los de los puntos restantes la cantidad dada por argumento
+     *
+     * @param puntos puntos que se restan
+     */
+    public void RestPuntosRest(int puntos)
     {
-        this.puntos_rest -= puntos_rest;
+        this.puntosRest -= puntos;
     }
 
+    /**
+     * Asigna un valor a un flag
+     *
+     * @param i numero del flag
+     * @param valor True para que lo tenga, false para que no lo tenga
+     */
     public void setFlag(int i, boolean valor)
     {
         this.Flags.set(i, valor);
     }
 
+    /**
+     * Modificador de reproduccion
+     *
+     * @param probReproduccion modifica la probabilidad de que un ser se
+     * reproduzca
+     */
     public void addProbReproduccion(int probReproduccion)
     {
         this.probReproduccion += probReproduccion;
     }
 
+    /**
+     * Modificador de camada
+     *
+     * @param camada numero de crias añadidas, puede ser decimal
+     */
     public void addCamada(float camada)
     {
         this.camada += camada;
     }
 
+    /**
+     * Modificador de combate
+     *
+     * @param combate combate modificado
+     */
     public void addCombate(int combate)
     {
         this.combate += combate;
     }
 
+    /**
+     * Modificador de caza
+     *
+     * @param caza caza modificada
+     */
     public void addCaza(int caza)
     {
         this.caza += caza;
     }
 
+    /**
+     * Modificador de defensa
+     *
+     * @param defensa defensa modificada
+     */
     public void addDefensa(int defensa)
     {
         this.defensa += defensa;
     }
 
+    /**
+     * Asigna un tamaño a una especie
+     *
+     * @param tamano tamaño que tendrá
+     */
     public void setTamano(int tamano)
     {
         this.tamano = tamano;
     }
 
+    /**
+     * Modifica cuanto alimento requiere para sobrevivir
+     *
+     * @param alimRequerido alimento que requiere
+     */
     public void addAlimRequerido(int alimRequerido)
     {
         this.alimRequerido += alimRequerido;
     }
 
+    /**
+     * Modifica cuanto alimento da cuando es cazadp
+     *
+     * @param alimDado alimento dado por caza
+     */
     public void addAlimDado(int alimDado)
     {
         this.alimDado += alimDado;
     }
 
+    /**
+     * Modifica cuanto alimento da por simbiosis
+     *
+     * @param alimDadoB alimento dado por simbiosis
+     */
     public void addAlimDadoB(int alimDadoB)
     {
         this.alimDadoB += alimDadoB;
     }
 
+    /**
+     * Modifica el crecimiento por simbiosis
+     *
+     * @param crecB crecimiento por simbiosis
+     */
     public void addCrecB(int crecB)
     {
         this.crecB += crecB;
     }
 
-    public void addEntorno(int i, int valor)
+    /**
+     * Modifica la adaptación al bioma
+     *
+     * @param bioma indicador de bioma modificado
+     * @param valor cantidad en que el bioma se modifica
+     */
+    public void addEntorno(int bioma, int valor)
     {
-        this.Entorno.set(i, valor + this.Entorno.get(i));
+        this.Entorno.set(bioma, valor + this.Entorno.get(bioma));
     }
-
 
     @Override
     public String toString()
     {
         return this.nombre;
     }
-
-    
-
 
 }

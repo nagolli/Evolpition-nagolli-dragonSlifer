@@ -8,6 +8,9 @@ package Modelo;
 import java.util.ArrayList;
 
 /**
+ * Clase que representa un ecosistema siguiendo un modelo de: vector de
+ * poblacion(iteracion i) * matriz de variacion = vector de poblacion(iteracion
+ * i+1)
  *
  * @author Ignacio
  */
@@ -19,15 +22,12 @@ public class Ecosistema
     private int bioma;
     private ArrayList<ArrayList<Float>> matrizCrecimiento;
 
-    /*BIOMAS:
-    * Agua Salada
-    * Agua Dulce
-    * Llanura
-    * Bosque
-    * Jungla
-    * Desierto
-    * Tundra
-    * Montaña
+    /**
+     * Copia el vector de especies e inicializa la poblacion y la matriz de
+     * crecimiento
+     *
+     * @param num Identificador de bioma
+     * @param especies Vector de especies
      */
     public Ecosistema(int num, ArrayList<Especie> especies)
     {
@@ -37,8 +37,10 @@ public class Ecosistema
         matrizCrecimiento = new ArrayList();
     }
 
-    /*
-    *	Funcion para recrear toda la matriz
+    /**
+     * Funcion para recrear toda la matriz de crecimiento
+     *
+     * @deprecated Aun no se ha usado
      */
     void CrearMatriz()
     {
@@ -48,22 +50,31 @@ public class Ecosistema
             matrizCrecimiento.add(i, new ArrayList());
             for (int j = 0; j < sizeN; j++) {
                 if (i == j) {
+                    //Calcula el crecimiento propio de la especie
                     matrizCrecimiento.get(i).add(especies.get(i).GetCrecimiento(bioma));
+                    //Redondea a 3 decimales:
                     matrizCrecimiento.get(i).set(j, (float) (Math.round(matrizCrecimiento.get(i).get(j) * 1000d) / 1000d));
                 } else {
+                    //Calcula el valor de interaccion entre especies
                     matrizCrecimiento.get(i).add(especies.get(i).Depredar(especies.get(j)));
+                    //Redondea a 3 decimales:
                     matrizCrecimiento.get(i).set(j, (float) (Math.round(matrizCrecimiento.get(i).get(j) * 1000d) / 1000d));
                 }
             }
         }
     }
 
-    /*
-    *	Funcion para recrear toda la matriz al modificar la especie en posicion ind
+    /**
+     * Funcion para recrear la matriz al modificar la especie en posicion ind.
+     * Solo modifica las interacciones de este indice
+     *
+     * @param ind Indice de la especie que ha sido modificada
+     * @deprecated Aun no se ha usado
      */
     void ModMatriz(int ind)
     {
         int sizeN = especies.size();
+        //Modifica la columna que contiene a esa especie, incluida ella misma
         for (int j = 0; j < sizeN; j++) {
             if (ind == j) {
                 matrizCrecimiento.get(j).set(ind, especies.get(j).GetCrecimiento(bioma));
@@ -73,6 +84,7 @@ public class Ecosistema
                 matrizCrecimiento.get(j).set(ind, (float) (Math.round(matrizCrecimiento.get(j).get(ind) * 1000d) / 1000d));
             }
         }
+        //Modifica la fila que contiene a esa especie, sin incluirse a si misma
         for (int j = 0; j < sizeN; j++) {
             if (ind != j) {
                 matrizCrecimiento.get(ind).set(j, especies.get(ind).Depredar(especies.get(j)));
@@ -81,8 +93,9 @@ public class Ecosistema
         }
     }
 
-    /*
-    *	Funcion para añadir las especies no creadas a la matriz de crecimiento de población
+    /**
+     * Funcion para añadir las especies todavia no actualizadas en la matriz de
+     * crecimiento de población
      */
     void AmpliarMatriz()
     {
@@ -108,24 +121,38 @@ public class Ecosistema
         }
     }
 
-    /*
-    *	Calculo de cuantos animales depreda una especie
+    /**
+     * Calculo de cuantos animales depreda una especie. Sirve para repartir el
+     * nivel de consumo de la especie dependiendo de cuantos otros seres consuma
+     *
+     * @param ind Indice de la especie que quiere saberse cuantos animales
+     * consume en ese bioma
+     * @return Total de criaturas de las que se alimenta, tanto por simbiosis
+     * como por consumicion
      */
-    private int GetDepredados(int i)
+    private int GetDepredados(int ind)
     {
         int sum = 0;
         for (int j = 0; j < matrizCrecimiento.size(); j++) {
-            if (matrizCrecimiento.get(i).get(j) != 0 && i != j) {
+            if (matrizCrecimiento.get(ind).get(j) != 0 && ind != j && poblacion.get(j) > 0) {
                 sum++;
             }
         }
         return sum;
     }
 
-    /*
-    * Funcion para que si una especie ha consumido demasiado, eliminar los miembros que se han alimentado en exceso
+    /**
+     * Funcion para que si una especie ha consumido demasiado, eliminar los
+     * miembros que se han alimentado en exceso. Calculara cuantos miembros no
+     * han podido alimentarse y los eliminará. No puede dejar una poblacion
+     * menor que 0.
+     *
+     * @param depredador Indice del depredador al que hay que eliminar poblacion
+     * @param alimentoQuitar Cantidad de unidades de alimento que hay que restar
+     * a la especie. Debe ser negativo para que reste la poblacion
+     *
      */
-    private void reducirExceso(int depredador, float alimentoQuitar, ArrayList<Integer> poblacion)
+    private void reducirExceso(int depredador, float alimentoQuitar)
     {
         float pob = poblacion.get(depredador) + (alimentoQuitar / especies.get(depredador).getAlimRequerido());
         if (pob > 0) {
@@ -135,51 +162,61 @@ public class Ecosistema
         }
     }
 
-    /*
-    *	Producto de vector por matriz con la particularidad de que si el resultado es menor que cero, ajusta la otra poblacion y no opera si la columna o fila tiene poblacion 0
-    *	Ademas, previamente a encontrarse a si mismo, calcula sobre la poblacion anterior si se ha consumido demasiado, y luego al encontrarse a si mismo, elimina esa diferencia
+    /**
+     * Producto de poblacion por matrizCrecimiento con la particularidad de que
+     * si el resultado es menor que cero, ajusta la otra poblacion y no opera si
+     * la columna o fila tiene poblacion 0 Ademas, previamente a encontrarse a
+     * si mismo, calcula sobre la poblacion anterior si se ha consumido
+     * demasiado, y luego al encontrarse a si mismo, elimina esa diferencia
      */
-    private ArrayList<Integer> producto(ArrayList<Integer> vector, ArrayList<ArrayList<Float>> matriz)
+    private void producto()
     {
         float sum;
-        int size = vector.size();
+        int size = poblacion.size();
         ArrayList<Integer> depredados = new ArrayList();
         for (int i = 0; i < size; i++) {
             depredados.add(GetDepredados(i));
         }
         for (int i = 0; i < size; i++) {
-            if (vector.get(i) > 0) {
-                sum = vector.get(i);
+            //Condicion para ahorrar ejecuciones
+            if (poblacion.get(i) > 0) {
+                //Obtencion de poblacion inicial
+                sum = poblacion.get(i);
                 for (int j = 0; j < size; j++) {
-                    if (vector.get(j) > 0) {
+                    //Condicion para ahorrar ejecuciones
+                    if (poblacion.get(j) > 0) {
                         if (i == j) {
-                            sum -= vector.get(i);
-                            sum += (float) (vector.get(i)) * matriz.get(i).get(j);
+                            //Resta poblacion inicial y añade la poblacion en esa iteración
+                            sum -= poblacion.get(i);
+                            sum += (float) (poblacion.get(i)) * matrizCrecimiento.get(i).get(j);
+                            //Previene que sea menor que 0
                             if (sum < 0) {
                                 sum = 0;
                             }
                         } else {
-                            sum += (float) (vector.get(i)) * matriz.get(j).get(i);
+                            //Varía la suma segun el efecto de esta especie en la otra
+                            sum += (float) (poblacion.get(i)) * matrizCrecimiento.get(j).get(i);
+                            //Si reduce la especie por debajo de lo que debería, reduce los numeros de este depredador
                             if (sum < 0) {
-                                reducirExceso(j, sum / (especies.get(i).getAlimDado(true) * depredados.get(j)), vector); //Si depredados es 0 esto no es posible
+                                reducirExceso(j, sum / (especies.get(i).getAlimDado(true) * depredados.get(j))); //Si depredados es 0 esto no es posible
                                 sum = 0;
                             }
                         }
                     }
-                    vector.set(i, Math.round(sum));
+                    //Asigna la poblacion final a esta especie
+                    poblacion.set(i, Math.round(sum));
                 }
             }
         }
-
-        return vector;
     }
 
-    /*
-    * Funcion para aplicar un ciclo sobre la población, luego comprueba si una especie se ha quedado sin alimento
+    /**
+     * Funcion para aplicar un ciclo sobre la población, luego comprueba si una
+     * especie se ha quedado sin alimento, y si es asi, la elimina.
      */
-    ArrayList<Integer> EjecutarCiclo()
+    void EjecutarCiclo()
     {
-        ArrayList<Integer> resultado = producto(poblacion, matrizCrecimiento);
+        producto();
         int size = poblacion.size();
         int depredados;
         for (int i = 0; i < size; i++) {
@@ -196,11 +233,13 @@ public class Ecosistema
                 }
             }
         }
-        return resultado;
     }
 
-    /*
+    /**
     *   Devuelve la valoración de esa especie en ese ecosistema
+    * 
+    *   @param esp Especie de la que se devuelve la puntuacion
+    *   @return entero de puntuacion
      */
     public int getPuntuacionEspecie(Especie esp)
     {
@@ -212,6 +251,9 @@ public class Ecosistema
         return 0;
     }
 
+    /**
+    *   Funcion para añadir
+    */
     void anadirPoblacion(Especie esp)
     {
         poblacion.add(esp.getPoblacionInicial(bioma));

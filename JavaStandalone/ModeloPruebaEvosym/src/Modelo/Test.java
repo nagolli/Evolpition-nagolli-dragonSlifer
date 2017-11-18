@@ -10,6 +10,8 @@ import java.util.ArrayList;
 /**
  *
  * @author Ignacio
+ * 
+ * Clase creada unicamente para probar el funcionamiento del modelo
  */
 public class Test
 {
