@@ -24,11 +24,11 @@ public class Test
             ecosistemas.add(false);//AGUA SALADA
             ecosistemas.add(false);//AGUA DULCE
             ecosistemas.add(true);//LLANURA
-            ecosistemas.add(true);//BOSQUE
-            ecosistemas.add(true);//JUNGLA
+            ecosistemas.add(false);//BOSQUE
+            ecosistemas.add(false);//JUNGLA
             ecosistemas.add(true);//DESIERTO
             ecosistemas.add(true); //TUNDRA
-            ecosistemas.add(true); //MONTAÑA
+            ecosistemas.add(false); //MONTAÑA
         Planeta p=new Planeta(ecosistemas);
         System.out.println("Planeta creado con exito!");
         Especie cesped = new Especie();
@@ -44,6 +44,7 @@ public class Test
         cesped.addMejora(Mejoras.GetId(9));
         cesped.addMejora(Mejoras.GetId(9));
         cesped.addMejora(Mejoras.GetId(9));
+        cesped.addMejora(Mejoras.GetId(58));
         cesped.finEditar();
         p.AddEspecie(cesped);
         
@@ -136,6 +137,46 @@ public class Test
         leon.addMejora(Mejoras.GetId(30));
         leon.finEditar();
         p.AddEspecie(leon);
+        
+        Especie jirafa = new Especie();
+        jirafa.setNombre("Jirafa");
+        jirafa.addMejora(Mejoras.GetId(2));
+        jirafa.addMejora(Mejoras.GetId(24));
+        jirafa.addMejora(Mejoras.GetId(27));
+        jirafa.addMejora(Mejoras.GetId(15));
+        jirafa.addMejora(Mejoras.GetId(25));
+        jirafa.addMejora(Mejoras.GetId(49));
+        jirafa.addMejora(Mejoras.GetId(51));
+        jirafa.addMejora(Mejoras.GetId(47));
+        jirafa.addMejora(Mejoras.GetId(6));
+        jirafa.addMejora(Mejoras.GetId(34));
+        jirafa.addMejora(Mejoras.GetId(3));
+        jirafa.addMejora(Mejoras.GetId(36));
+        jirafa.addMejora(Mejoras.GetId(25));
+        jirafa.addMejora(Mejoras.GetId(25));
+        jirafa.addMejora(Mejoras.GetId(38));
+        jirafa.addMejora(Mejoras.GetId(38));
+        jirafa.addMejora(Mejoras.GetId(38));
+        jirafa.finEditar();
+        p.AddEspecie(jirafa);
+        
+        Especie elefante = new Especie();
+        elefante.setNombre("Elefante");
+        elefante.addMejora(Mejoras.GetId(2));
+        elefante.addMejora(Mejoras.GetId(24));
+        elefante.addMejora(Mejoras.GetId(27));
+        elefante.addMejora(Mejoras.GetId(15));
+        elefante.addMejora(Mejoras.GetId(25));
+        elefante.addMejora(Mejoras.GetId(49));
+        elefante.addMejora(Mejoras.GetId(51));
+        elefante.addMejora(Mejoras.GetId(47));
+        elefante.addMejora(Mejoras.GetId(33));
+        elefante.addMejora(Mejoras.GetId(11));
+        elefante.addMejora(Mejoras.GetId(30));
+        elefante.addMejora(Mejoras.GetId(55));
+        elefante.addMejora(Mejoras.GetId(55));
+        elefante.finEditar();
+        p.AddEspecie(elefante);
         
         System.out.println("Iteracion 0:\n"+p+"\n");
         p.SiguienteTurno();

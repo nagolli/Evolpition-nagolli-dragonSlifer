@@ -49,8 +49,10 @@ public class Ecosistema
             for (int j = 0; j < sizeN; j++) {
                 if (i == j) {
                     matrizCrecimiento.get(i).add(especies.get(i).GetCrecimiento(bioma));
+                    matrizCrecimiento.get(i).set(j, (float) (Math.round(matrizCrecimiento.get(i).get(j) * 1000d) / 1000d));
                 } else {
                     matrizCrecimiento.get(i).add(especies.get(i).Depredar(especies.get(j)));
+                    matrizCrecimiento.get(i).set(j, (float) (Math.round(matrizCrecimiento.get(i).get(j) * 1000d) / 1000d));
                 }
             }
         }
@@ -65,14 +67,16 @@ public class Ecosistema
         for (int j = 0; j < sizeN; j++) {
             if (ind == j) {
                 matrizCrecimiento.get(j).set(ind, especies.get(j).GetCrecimiento(bioma));
+                matrizCrecimiento.get(j).set(ind, (float) (Math.round(matrizCrecimiento.get(j).get(ind) * 1000d) / 1000d));
             } else {
                 matrizCrecimiento.get(j).set(ind, especies.get(j).Depredar(especies.get(ind)));
+                matrizCrecimiento.get(j).set(ind, (float) (Math.round(matrizCrecimiento.get(j).get(ind) * 1000d) / 1000d));
             }
         }
         for (int j = 0; j < sizeN; j++) {
             if (ind != j) {
                 matrizCrecimiento.get(ind).set(j, especies.get(ind).Depredar(especies.get(j)));
-
+                matrizCrecimiento.get(ind).set(j, (float) (Math.round(matrizCrecimiento.get(ind).get(j) * 1000d) / 1000d));
             }
         }
     }
@@ -87,16 +91,18 @@ public class Ecosistema
         for (int i = 0; i < sizeV; i++) {
             for (int j = sizeV; j < sizeN; j++) {
                 matrizCrecimiento.get(i).add(especies.get(i).Depredar(especies.get(j)));
+                matrizCrecimiento.get(i).set(j, (float) (Math.round(matrizCrecimiento.get(i).get(j) * 1000d) / 1000d));
             }
         }
         for (int i = sizeV; i < sizeN; i++) {
             matrizCrecimiento.add(new ArrayList());
             for (int j = 0; j < sizeN; j++) {
                 if (i == j) {
-
                     matrizCrecimiento.get(i).add(especies.get(i).GetCrecimiento(bioma));
+                    matrizCrecimiento.get(i).set(j, (float) (Math.round(matrizCrecimiento.get(i).get(j) * 1000d) / 1000d));
                 } else {
                     matrizCrecimiento.get(i).add(especies.get(i).Depredar(especies.get(j)));
+                    matrizCrecimiento.get(i).set(j, (float) (Math.round(matrizCrecimiento.get(i).get(j) * 1000d) / 1000d));
                 }
             }
         }
@@ -121,7 +127,7 @@ public class Ecosistema
      */
     private void reducirExceso(int depredador, float alimentoQuitar, ArrayList<Integer> poblacion)
     {
-        float pob = poblacion.get(depredador) + ( alimentoQuitar/especies.get(depredador).getAlimRequerido()  );
+        float pob = poblacion.get(depredador) + (alimentoQuitar / especies.get(depredador).getAlimRequerido());
         if (pob > 0) {
             poblacion.set(depredador, Math.round(pob));
         } else {
@@ -155,7 +161,7 @@ public class Ecosistema
                         } else {
                             sum += (float) (vector.get(i)) * matriz.get(j).get(i);
                             if (sum < 0) {
-                                reducirExceso(j, sum / ( especies.get(i).getAlimDado(true) * depredados.get(j)), vector); //Si depredados es 0 esto no es posible
+                                reducirExceso(j, sum / (especies.get(i).getAlimDado(true) * depredados.get(j)), vector); //Si depredados es 0 esto no es posible
                                 sum = 0;
                             }
                         }

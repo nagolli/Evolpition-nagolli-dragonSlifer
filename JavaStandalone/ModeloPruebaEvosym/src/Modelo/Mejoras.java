@@ -91,9 +91,10 @@ public class Mejoras
                 lista.add(new Mejora(52,3,2,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,1,"Trepar"));
                 lista.add(new Mejora(53,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"Vegetal"));
                 lista.add(new Mejora(54,1,2,10,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,"Volar "));
-                lista.add(new Mejora(55,3,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,"Voluminoso"));
+                lista.add(new Mejora(55,3,0,7,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,"Voluminoso"));
                 lista.add(new Mejora(56,3,1,8,0,5,0,0,0,1,0,0,-1,0,0,0,0,0,0,0,0,0,0,"Zarzas"));
                 lista.add(new Mejora(57,1,9,10,15,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,"Infestar arbol"));
+                lista.add(new Mejora(58,1,0,4,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,"Sacia con facilidad"));
     }
 }
 

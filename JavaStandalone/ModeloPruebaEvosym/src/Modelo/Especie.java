@@ -77,7 +77,7 @@ public class Especie
     {
         if(Entorno.get(bioma)<=0)
             return 0;
-        return (int)((10000 - (puntos_rest * 100)) / calculaPuntuacionPorSer());
+        return (int)((10000 + (puntos_rest * 100)) / calculaPuntuacionPorSer());
     }
 
     //FUNCIONES PARA CREACION
@@ -149,10 +149,10 @@ public class Especie
      */
     float GetCrecimiento(int bioma)
     {
-        if(Entorno.get(bioma)<=0)
+       if(Entorno.get(bioma)<=0)
             return 0;
         else
-            return ((float) probReproduccion * (float) camada / 100 + 1 - 1 / ((Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1)));
+            return ((float) probReproduccion * (float) camada / 100f + 1f - 1f / (float)((Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1)));
     }
 
     /*
