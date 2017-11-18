@@ -20,7 +20,7 @@ public final class Mejora
     private final int flag;
 
     private final int probReproduccion;
-    private final int camada;
+    private final float camada;
 
     private final int combate;
     private final int caza;
@@ -36,7 +36,7 @@ public final class Mejora
 
     private final ArrayList<Integer> Entorno;
 
-    public Mejora(int id, int maximoVeces, int flagRequerida, int coste, int flag, int probReproduccion, int camada, int combate, int caza, int defensa, int tamano, int alimRequerido, int alimDado, int alimDadoB, int crecB, int adapsalada, int adapdulce, int adapllanura, int adapbosque, int adapjungla, int adapdesierto, int adaptundra, int adapmontaña, String nombre)
+    public Mejora(int id, int maximoVeces, int flagRequerida, int coste, int flag, int probReproduccion, float camada, int combate, int caza, int defensa, int tamano, int alimRequerido, int alimDado, int alimDadoB, int crecB, int adapsalada, int adapdulce, int adapllanura, int adapbosque, int adapjungla, int adapdesierto, int adaptundra, int adapmontaña, String nombre)
     {
         this.maximoVeces=maximoVeces;
         this.id = id;
@@ -74,6 +74,10 @@ public final class Mejora
                 return false;
             }
         }
+        if(tamano!=0&&!esp.getTamano().equals("Mediano"))
+        {
+            return false;
+        }
         esp.RestPuntos_rest(coste);
         if(tamano>0)
             esp.setTamano(tamano);
@@ -90,7 +94,9 @@ public final class Mejora
             esp.addEntorno(i, Entorno.get(i));
         }
         if(flag>0)
+        {
             esp.setFlag(flag, true);
+        }
         return true;
     }
 
@@ -118,11 +124,33 @@ public final class Mejora
 
     boolean Adquirible(Especie esp,int puntos)
     {
+        if (esp.getCantMejora(this)==this.maximoVeces || esp.getPuntosRest()<coste)
+            return false;
+        if (flagRequerida > 0) {
+            if (!esp.getFlags().get(flagRequerida)) {
+                return false;
+            }
+        }
+        if(tamano!=0&&!esp.getTamano().equals("Mediano"))
+        {
+            return false;
+        }
         return (puntos>=coste);
     }
     
     int getFlag()
     {
         return flag;
+    }
+    
+    String getNombre()
+    {
+        return this.nombre;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return this.nombre;
     }
 }

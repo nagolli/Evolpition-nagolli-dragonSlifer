@@ -52,4 +52,21 @@ public class Planeta
         }
         return sum;
     }
+    
+    
+    
+    @Override
+    public String toString()
+    {
+        String aux =""; 
+        for(int i=0;i<especies.size();i++)
+        {
+            aux += especies.get(i)+"\n";
+        }
+        for(int i=0;i<ecosistemas.size();i++)
+        {
+            aux += ecosistemas.get(i)+"\n";
+        }
+        return aux;
+    }
 }

@@ -20,7 +20,7 @@ public class Especie
     private ArrayList<Boolean> Flags;	    //Marcadores especiales de mejoras //FLAG 0 no se usa
 
     private int probReproduccion;	//Probabilidad de reproduccion
-    private int camada;                 //Aumento de poblacion por cada reproduccion
+    private float camada;                 //Aumento de poblacion por cada reproduccion
 
     private int combate;		//Valor de combate
     private int caza;                   //Valor de caza
@@ -35,27 +35,33 @@ public class Especie
     private final ArrayList<Integer> Entorno;	//A mayor entorno, menor probabilidad de muerte natural en ese bioma// funcion: =1/((x+1)^3)
 
     //Funciones de equilibrio
-    private int calculaPuntuacionPorSer()
+    private float calculaPuntuacionPorSer()
     {
-        int alimentacion = 1;
+        float alimentacion = 1f;
         if (getFlagsCazador()) {
-            alimentacion += 2;
+            alimentacion += 2f;
         }
         if (getFlagsSimbiosis()) {
-            alimentacion += 1;
+            alimentacion += 1f;
         }
         if (getFlagsHervivoro()) {
-            alimentacion += 1;
+            alimentacion += 1f;
         }
         if (getFlagsOmnivoro()) {
-            alimentacion -= 3;
+            alimentacion -= 2f;
+        }
+        if(getFlagsAutotrofo())
+        {
+            alimentacion /= 10f;
         }
         switch (tamano) {
-            case 1:
-                return alimentacion / 10000;
-            case 2:
-                return alimentacion / 100;
             case 3:
+                return alimentacion / 1000;
+            case 4:
+                return alimentacion / 100;
+            case 5:
+                return alimentacion / 10;
+            case 6:
                 return alimentacion / 1;
             default:
                 return -10;
@@ -64,12 +70,14 @@ public class Especie
 
     int getPuntuacion(int poblacion)
     {
-        return poblacion * calculaPuntuacionPorSer();
+        return (int)(poblacion * calculaPuntuacionPorSer());
     }
 
-    Integer getPoblacionInicial()
+    int getPoblacionInicial(int bioma)
     {
-        return (10000 + puntos_rest * 100) / calculaPuntuacionPorSer();
+        if(Entorno.get(bioma)<=0)
+            return 0;
+        return (int)((10000 - (puntos_rest * 100)) / calculaPuntuacionPorSer());
     }
 
     //FUNCIONES PARA CREACION
@@ -86,7 +94,7 @@ public class Especie
         Flags.ensureCapacity(256);
         for (int i = 0; i < 256; i++) //CAMBIAR SI SE EXCEDEN, 256 ocupa 1 byte
         {
-            Entorno.add(0);
+            Flags.add(false);
         }
         probReproduccion = 5;
         camada = 1;
@@ -141,7 +149,10 @@ public class Especie
      */
     float GetCrecimiento(int bioma)
     {
-        return ((float) probReproduccion * (float) camada / 100 + 1 - 1 / ((Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1)));
+        if(Entorno.get(bioma)<=0)
+            return 0;
+        else
+            return ((float) probReproduccion * (float) camada / 100 + 1 - 1 / ((Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1) * (Entorno.get(bioma) + 1)));
     }
 
     /*
@@ -150,45 +161,87 @@ public class Especie
     float Depredar(Especie e2)
     {
         if (this.getFlagsSimbiosis(e2)) {
-            return (float) (this.alimRequerido * crecB / e2.alimDadoB);
+            return (float) ( (float)(e2.alimDadoB)* (float)(e2.crecB)/100 / this.alimRequerido);
         }
-        if (this.getFlagsDepredar(e2) && (Math.abs(5 * (this.tamano - e2.tamano)) + this.combate - e2.combate + this.caza - e2.defensa) > 0) {
-            return (float) (-this.alimRequerido / e2.alimDado);
+        /*
+        System.out.println(nombre+" a "+e2.nombre);
+        System.out.println("Bono por tamano:"+this.getVariacionTamano(e2));
+        System.out.println("Bono por combate:"+(this.combate + this.caza ));
+        System.out.println("Penal por defensa:"+(e2.combate + e2.defensa));
+        System.out.println("Otros:"+(this.getFlagsCazaManada(e2)));
+        */
+        if (this.getFlagsDepredar(e2) && (this.getVariacionTamano(e2) + this.combate - e2.combate + this.caza - e2.defensa + this.getFlagsCazaManada(e2)) > 0) {
+            return (float)(-this.alimRequerido) / (float)(e2.alimDado);
         }
         return 0;
     }
 
+    private int getVariacionTamano(Especie e2)
+    {
+       int aux=0;
+       if(this.getFlag(13))
+           if((this.getTamanoN()-e2.getTamanoN())==1)
+               return 5;
+       if(this.getFlag(15))
+           if((this.getTamanoN()-e2.getTamanoN())<-1)
+               return 5*(e2.getTamanoN()-this.getTamanoN())-5;
+       aux+= -Math.abs(5 * (this.tamano - e2.tamano));
+       return aux;
+    }
+    
     /*
     *   Getters de Flags
      */
     private boolean getFlagsSimbiosis() //Tiene alguna simbiosis?
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(Flags.get(3)||Flags.get(6))
+            return true;
+        return false;
     }
 
     private boolean getFlagsDepredar(Especie e2) //Esta especie depreda a la otra
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(Flags.get(9)&&e2.getFlag(1))
+            return true;
+        if(Flags.get(8)&&e2.getFlag(2))
+            return true;
+        return false;
     }
-
     boolean getFlagsAutotrofo() //Esta especie sobrevive por si misma?
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(Flags.get(14))
+            return true;
+        return false;
     }
 
     private boolean getFlagsSimbiosis(Especie e2) //Tiene simbiosis con e2?
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(Flags.get(4)&&e2.getFlag(3))
+            return true;
+        if(Flags.get(7)&&e2.getFlag(6))
+            return true;
+        return false;
     }
 
     private boolean getFlagsCazador() //Esta especie se alimenta de animales
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(Flags.get(8))
+            return true;
+        return false;
+    }
+    
+    private int getFlagsCazaManada(Especie e2) //Esta especie se alimenta de animales
+    {
+        if(Flags.get(12)&&e2.getFlag(11))
+            return 3;
+        return 0;
     }
 
     private boolean getFlagsHervivoro() //Esta especie se alimenta de plantas
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(Flags.get(9))
+            return true;
+        return false;
     }
 
     private boolean getFlagsOmnivoro()
@@ -238,7 +291,7 @@ public class Especie
         return probReproduccion;
     }
 
-    public int getCamada()
+    public float getCamada()
     {
         return camada;
     }
@@ -265,6 +318,8 @@ public class Especie
                 return "Mediano";
             case 4:
                 return "Pequeño";
+            case 3:
+                return "Muy Pequeño";
             case 6:
                 return "Grande";
         }
@@ -275,7 +330,17 @@ public class Especie
     {
         return crecB;
     }
+    
+    private Boolean getFlag(int i)
+    {
+        return Flags.get(i);
+    }
 
+        private int getTamanoN()
+    {
+        return tamano;
+    }
+    
     /*
     * Otros getters
      */
@@ -319,7 +384,7 @@ public class Especie
         this.probReproduccion += probReproduccion;
     }
 
-    public void addCamada(int camada)
+    public void addCamada(float camada)
     {
         this.camada += camada;
     }
@@ -368,5 +433,15 @@ public class Especie
     {
         this.Entorno.set(i, valor + this.Entorno.get(i));
     }
+
+
+    @Override
+    public String toString()
+    {
+        return this.nombre;
+    }
+
+    
+
 
 }

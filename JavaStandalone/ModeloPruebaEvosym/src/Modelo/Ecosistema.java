@@ -38,6 +38,46 @@ public class Ecosistema
     }
 
     /*
+    *	Funcion para recrear toda la matriz
+     */
+    void CrearMatriz()
+    {
+        matrizCrecimiento = new ArrayList();
+        int sizeN = especies.size();
+        for (int i = 0; i < sizeN; i++) {
+            matrizCrecimiento.add(i, new ArrayList());
+            for (int j = 0; j < sizeN; j++) {
+                if (i == j) {
+                    matrizCrecimiento.get(i).add(especies.get(i).GetCrecimiento(bioma));
+                } else {
+                    matrizCrecimiento.get(i).add(especies.get(i).Depredar(especies.get(j)));
+                }
+            }
+        }
+    }
+
+    /*
+    *	Funcion para recrear toda la matriz al modificar la especie en posicion ind
+     */
+    void ModMatriz(int ind)
+    {
+        int sizeN = especies.size();
+        for (int j = 0; j < sizeN; j++) {
+            if (ind == j) {
+                matrizCrecimiento.get(j).set(ind, especies.get(j).GetCrecimiento(bioma));
+            } else {
+                matrizCrecimiento.get(j).set(ind, especies.get(j).Depredar(especies.get(ind)));
+            }
+        }
+        for (int j = 0; j < sizeN; j++) {
+            if (ind != j) {
+                matrizCrecimiento.get(ind).set(j, especies.get(ind).Depredar(especies.get(j)));
+
+            }
+        }
+    }
+
+    /*
     *	Funcion para añadir las especies no creadas a la matriz de crecimiento de población
      */
     void AmpliarMatriz()
@@ -46,16 +86,17 @@ public class Ecosistema
         int sizeN = especies.size();
         for (int i = 0; i < sizeV; i++) {
             for (int j = sizeV; j < sizeN; j++) {
-                matrizCrecimiento.get(i).set(i, especies.get(i).Depredar(especies.get(j)));
+                matrizCrecimiento.get(i).add(especies.get(i).Depredar(especies.get(j)));
             }
         }
         for (int i = sizeV; i < sizeN; i++) {
-            matrizCrecimiento.set(i, new ArrayList());
+            matrizCrecimiento.add(new ArrayList());
             for (int j = 0; j < sizeN; j++) {
                 if (i == j) {
-                    matrizCrecimiento.get(i).set(i, especies.get(i).GetCrecimiento(bioma));
+
+                    matrizCrecimiento.get(i).add(especies.get(i).GetCrecimiento(bioma));
                 } else {
-                    matrizCrecimiento.get(i).set(i, especies.get(i).Depredar(especies.get(j)));
+                    matrizCrecimiento.get(i).add(especies.get(i).Depredar(especies.get(j)));
                 }
             }
         }
@@ -80,7 +121,7 @@ public class Ecosistema
      */
     private void reducirExceso(int depredador, float alimentoQuitar, ArrayList<Integer> poblacion)
     {
-        float pob = poblacion.get(depredador) + (especies.get(depredador).getAlimRequerido() / alimentoQuitar);
+        float pob = poblacion.get(depredador) + ( alimentoQuitar/especies.get(depredador).getAlimRequerido()  );
         if (pob > 0) {
             poblacion.set(depredador, Math.round(pob));
         } else {
@@ -112,9 +153,9 @@ public class Ecosistema
                                 sum = 0;
                             }
                         } else {
-                            sum += (float) (vector.get(i)) * matriz.get(i).get(j);
+                            sum += (float) (vector.get(i)) * matriz.get(j).get(i);
                             if (sum < 0) {
-                                reducirExceso(j, sum * especies.get(i).getAlimDado(true) / depredados.get(j), vector); //Si depredados es 0 esto no es posible
+                                reducirExceso(j, sum / ( especies.get(i).getAlimDado(true) * depredados.get(j)), vector); //Si depredados es 0 esto no es posible
                                 sum = 0;
                             }
                         }
@@ -123,6 +164,7 @@ public class Ecosistema
                 }
             }
         }
+
         return vector;
     }
 
@@ -166,6 +208,43 @@ public class Ecosistema
 
     void anadirPoblacion(Especie esp)
     {
-        poblacion.add(esp.getPoblacionInicial());
+        poblacion.add(esp.getPoblacionInicial(bioma));
+    }
+
+    @Override
+    public String toString()
+    {
+        String aux = "\nBioma: ";
+        switch (bioma) {
+            case 0:
+                aux += "Agua salada";
+                break;
+            case 1:
+                aux += "Agua dulce";
+                break;
+            case 2:
+                aux += "Llanura";
+                break;
+            case 3:
+                aux += "Bosque";
+                break;
+            case 4:
+                aux += "Jungla";
+                break;
+            case 5:
+                aux += "Desierto";
+                break;
+            case 6:
+                aux += "Tundra";
+                break;
+            case 7:
+                aux += "Montaña";
+                break;
+        }
+        aux += "\n" + poblacion + "\n\n";
+        for (int i = 0; i < matrizCrecimiento.size(); i++) {
+            aux += matrizCrecimiento.get(i) + "\n";
+        }
+        return aux;
     }
 }
