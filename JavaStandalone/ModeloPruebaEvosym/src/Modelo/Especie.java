@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 /**
  * Clase especie, representa una especie y sus parametros
+ *
  * @author Ignacio
  */
 public class Especie
@@ -219,9 +220,9 @@ public class Especie
         System.out.println("Bono por tamano:"+this.getVariacionTamano(e2));
         System.out.println("Bono por combate:"+(this.combate + this.caza ));
         System.out.println("Penal por defensa:"+(e2.combate + e2.defensa));
-        System.out.println("Otros:"+(this.getFlagsCazaManada(e2)));
+        System.out.println("Otros:"+(this.getFlagsBonoCaza(e2)));
          */
-        if (this.getFlagsDepredar(e2) && (this.getVariacionTamano(e2) + this.combate - e2.combate + this.caza - e2.defensa + this.getFlagsCazaManada(e2)) > 0) {
+        if (this.getFlagsDepredar(e2) && (this.getVariacionTamano(e2) + this.combate - e2.combate + this.caza - e2.defensa + this.getFlagsBonoCaza(e2)) > 0) {
             return (float) (-this.alimRequerido) / (float) (e2.alimDado);
         }
         return 0;
@@ -335,14 +336,19 @@ public class Especie
     }
 
     /**
-     * Esta especie es buena cazando manadas y la depredada forma manadas?
+     * Esta especie es buena cazando a la otra?
      *
      * @param e2 Especie depredada
      * @return Verdadero si es cierto
      */
-    private int getFlagsCazaManada(Especie e2) //Esta especie se alimenta de animales
+    private int getFlagsBonoCaza(Especie e2) //Esta especie se alimenta de animales
     {
+        //Buena cazando manadas? Y forma manada?
         if (Flags.get(12) && e2.getFlag(11)) {
+            return 3;
+        }
+        //Se alimenta de seres de agua dulce? Y vive en agua dulce?
+        if (Flags.get(18) && e2.getEntorno(1)>0) {
             return 3;
         }
         return 0;
@@ -375,8 +381,9 @@ public class Especie
     *   Getters estandar
      */
     /**
+     * Devuelve cuanto alimento necesita cada uno de esta especie
      *
-     * @return
+     * @return entero
      */
     int getAlimRequerido()
     {
@@ -384,23 +391,32 @@ public class Especie
     }
 
     /**
+     * Devuelve el listado completo de flags
      *
-     * @return
+     * @return Array de flags
+     * @deprecated Autogenerado
      */
     ArrayList<Boolean> getFlags()
     {
         return this.Flags;
     }
 
+    /**
+     * Devuelve los puntos restantes que esta especie puede invertir en mejoras
+     *
+     * @return puntos restantes
+     */
     int getPuntosRest()
     {
         return this.puntosRest;
     }
 
     /**
+     * Devuelve cuanto alimento da esta especie
      *
-     * @param caza
-     * @return
+     * @param caza True si es alimento dado por caza. False si es dado por
+     * simbiosis
+     * @return entero con la cantidad de alimento que da
      */
     float getAlimDado(boolean caza)
     {
@@ -412,8 +428,9 @@ public class Especie
     }
 
     /**
+     * Devuelve el nombre de la especie
      *
-     * @return
+     * @return String
      */
     public String getNombre()
     {
@@ -421,8 +438,9 @@ public class Especie
     }
 
     /**
+     * Devuelve la probabilidad de reproduccion
      *
-     * @return
+     * @return entero positivo
      */
     public int getProbReproduccion()
     {
@@ -430,8 +448,9 @@ public class Especie
     }
 
     /**
+     * Devuelve la camada media de la especie
      *
-     * @return
+     * @return float
      */
     public float getCamada()
     {
@@ -439,8 +458,9 @@ public class Especie
     }
 
     /**
+     * Devuelve el valor de combate de esta especie
      *
-     * @return
+     * @return int
      */
     public int getCombate()
     {
@@ -448,8 +468,9 @@ public class Especie
     }
 
     /**
+     * Devuelve el valor de caza de esta especie
      *
-     * @return
+     * @return int
      */
     public int getCaza()
     {
@@ -457,8 +478,9 @@ public class Especie
     }
 
     /**
+     * Devuelve el valor de defensa de esta especie
      *
-     * @return
+     * @return int
      */
     public int getDefensa()
     {
@@ -466,8 +488,9 @@ public class Especie
     }
 
     /**
+     * Devuelve el tamaño de esta especie
      *
-     * @return
+     * @return String
      */
     public String getTamanoS()
     {
@@ -692,6 +715,16 @@ public class Especie
     public String toString()
     {
         return this.nombre;
+    }
+
+    /**
+     * Devuelve el valor en el entorno
+     * @param i identificador de entorno
+     * @return Valor
+     */
+    public int getEntorno(int i)
+    {
+        return Entorno.get(i);
     }
 
 }

@@ -180,12 +180,20 @@ public class Test
         elefante.finEditar();
         p.AddEspecie(elefante);
         
-        System.out.println("Iteracion 0:\n"+p+"\n");
+        System.out.println("Iteracion 0:\n"+p);
         p.SiguienteTurno();
-        System.out.println("Iteracion 1:\n"+p+"\n");
+        System.out.println("Iteracion 1:\n"+p);
         p.SiguienteTurno();
-        System.out.println("Iteracion 2:\n"+p+"\n");
+        System.out.println("Iteracion 2:\n"+p);
 
+        System.out.println("Puntos finales:");
+        System.out.println("Cesped:   "+p.GetPuntuacionEspecie(cesped));
+        System.out.println("Acacia:   "+p.GetPuntuacionEspecie(acacia));
+        System.out.println("Cebra:    "+p.GetPuntuacionEspecie(cebra));
+        System.out.println("Mono:     "+p.GetPuntuacionEspecie(mono));
+        System.out.println("Leon:     "+p.GetPuntuacionEspecie(leon));
+        System.out.println("Jirafa:   "+p.GetPuntuacionEspecie(jirafa));
+        System.out.println("Elefante: "+p.GetPuntuacionEspecie(elefante));
         System.exit(0);
     }
     

@@ -19,6 +19,7 @@ public class Ecosistema
 
     private ArrayList<Especie> especies;
     private ArrayList<Integer> poblacion;
+    private ArrayList<Integer> variacion;
     private int bioma;
     private ArrayList<ArrayList<Float>> matrizCrecimiento;
 
@@ -33,6 +34,7 @@ public class Ecosistema
     {
         this.especies = especies;
         poblacion = new ArrayList();
+        variacion = new ArrayList();
         this.bioma = num;
         matrizCrecimiento = new ArrayList();
     }
@@ -216,6 +218,10 @@ public class Ecosistema
      */
     void EjecutarCiclo()
     {
+        for(int i=0;i<variacion.size();i++)
+        {
+            variacion.set(i,poblacion.get(i));
+        }
         producto();
         int size = poblacion.size();
         int depredados;
@@ -233,6 +239,12 @@ public class Ecosistema
                 }
             }
         }
+        
+        for(int i=0;i<variacion.size();i++)
+        {
+            variacion.set(i,poblacion.get(i)-variacion.get(i));
+        }
+        
     }
 
     /**
@@ -257,6 +269,7 @@ public class Ecosistema
     void anadirPoblacion(Especie esp)
     {
         poblacion.add(esp.getPoblacionInicial(bioma));
+        variacion.add(0);
     }
 
     @Override
@@ -289,7 +302,7 @@ public class Ecosistema
                 aux += "Montaña";
                 break;
         }
-        aux += "\n" + poblacion + "\n\n";
+        aux += "\n" + poblacion +"\n"+variacion+ "\n\n";
         for (int i = 0; i < matrizCrecimiento.size(); i++) {
             aux += matrizCrecimiento.get(i) + "\n";
         }

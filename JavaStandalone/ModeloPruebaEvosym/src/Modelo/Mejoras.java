@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Mejoras
 {
 
-    ArrayList<Mejora> lista;
+    private ArrayList<Mejora> lista;
 
     /**
      * Devuelve todas las mejoras
@@ -117,5 +117,17 @@ public class Mejoras
         lista.add(new Mejora(58, 1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Sacia con facilidad"));
         lista.add(new Mejora(59, 3, 0, 15, 16, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Venenoso"));
         lista.add(new Mejora(60, 1, 0, 5, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Resistente al veneno"));
+        lista.add(new Mejora(61, 3, 0, 0, 0, 5, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Colores llamativos"));
+        lista.add(new Mejora(62,1,2,11,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,"Pico Pescador"));
+        lista.add(new Mejora(63,1,2,9,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,"Patas palmeadas"));
+        lista.add(new Mejora(64,3,2,9,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,"Pelaje grueso"));
+        lista.add(new Mejora(65,1,2,3,0,0,0,0,0,0,0,0,0,0,0,3,4,0,-1,-1,-2,0,-2,"Nadador"));
+        lista.add(new Mejora(66,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-2,-2,2,2,"Necesita frio"));
+        lista.add(new Mejora(67,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,-2,-2,"Necesita calor"));
+        lista.add(new Mejora(68,3,2,3,0,2,0.25f,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"Alimentar a las crias"));
+        lista.add(new Mejora(69,1,2,15,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"Pico rompehuesos"));
+        lista.add(new Mejora(70,1,0,7,0,0,0,0,0,1,0,-1,0,0,0,0,0,0,0,0,0,0,0,"Marcar el territorio"));
+        lista.add(new Mejora(71,3,0,20,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,1,2,"Rugir"));
+        lista.add(new Mejora(72,1,0,5,18,0,0,0,0,0,0,0,0,0,0,-4,-4,0,0,0,0,0,0,"Alimentarse en rios"));
     }
 }
