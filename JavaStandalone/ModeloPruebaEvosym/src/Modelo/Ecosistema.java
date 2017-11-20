@@ -174,6 +174,7 @@ public class Ecosistema
     private void producto()
     {
         float sum;
+        float aux, aux2;
         int size = poblacion.size();
         ArrayList<Integer> depredados = new ArrayList();
         for (int i = 0; i < size; i++) {
@@ -196,12 +197,28 @@ public class Ecosistema
                                 sum = 0;
                             }
                         } else {
-                            //Varía la suma segun el efecto de esta especie en la otra
-                            sum += (float) (poblacion.get(i)) * matrizCrecimiento.get(j).get(i);
-                            //Si reduce la especie por debajo de lo que debería, reduce los numeros de este depredador
-                            if (sum < 0) {
-                                reducirExceso(j, sum / (especies.get(i).getAlimDado(true) * depredados.get(j))); //Si depredados es 0 esto no es posible
-                                sum = 0;
+                            if (matrizCrecimiento.get(j).get(i) <= 0) {
+                                //Varía la suma segun el efecto de esta especie en la otra
+                                sum += (float) (poblacion.get(i)) * matrizCrecimiento.get(j).get(i) / Math.max(depredados.get(i), 1);
+                                //Si reduce la especie por debajo de lo que debería, reduce los numeros de este depredador
+                                if (sum < 0) {
+
+                                    reducirExceso(j, sum / (especies.get(i).getAlimDado(true))); //Si depredados es 0 esto no es posible
+                                    sum = 0;
+                                }
+                            } else {
+                                //Comprobar que no hay sobrealimentación
+
+                                aux2 = poblacion.get(i) * especies.get(i).getAlimDado(false); //Alim máximo dado
+                                aux = poblacion.get(j) * especies.get(j).getAlimRequerido() / depredados.get(j); //Alim requerida
+                                System.out.println("Simbiosis: " + especies.get(j) + " requiere: " + aux + "," + especies.get(i) + " aporta: " + aux2);
+                                if (aux2 < aux) {
+                                    System.out.println("Eliminando: " + (aux2 - aux / (especies.get(i).getAlimDado(false))) + " en " + especies.get(j));
+                                    reducirExceso(j, aux2 - aux / (especies.get(i).getAlimDado(false)));
+                                    sum += (float) (poblacion.get(i)) * matrizCrecimiento.get(j).get(i) / Math.max(depredados.get(i), 1);
+                                } else {
+                                    sum += (float) (poblacion.get(i)) * matrizCrecimiento.get(j).get(i) / Math.max(depredados.get(i), 1);
+                                }
                             }
                         }
                     }
@@ -218,9 +235,8 @@ public class Ecosistema
      */
     void EjecutarCiclo()
     {
-        for(int i=0;i<variacion.size();i++)
-        {
-            variacion.set(i,poblacion.get(i));
+        for (int i = 0; i < variacion.size(); i++) {
+            variacion.set(i, poblacion.get(i));
         }
         producto();
         int size = poblacion.size();
@@ -239,19 +255,18 @@ public class Ecosistema
                 }
             }
         }
-        
-        for(int i=0;i<variacion.size();i++)
-        {
-            variacion.set(i,poblacion.get(i)-variacion.get(i));
+
+        for (int i = 0; i < variacion.size(); i++) {
+            variacion.set(i, poblacion.get(i) - variacion.get(i));
         }
-        
+
     }
 
     /**
-    *   Devuelve la valoración de esa especie en ese ecosistema
-    * 
-    *   @param esp Especie de la que se devuelve la puntuacion
-    *   @return entero de puntuacion
+     * Devuelve la valoración de esa especie en ese ecosistema
+     *
+     * @param esp Especie de la que se devuelve la puntuacion
+     * @return entero de puntuacion
      */
     public int getPuntuacionEspecie(Especie esp)
     {
@@ -264,8 +279,8 @@ public class Ecosistema
     }
 
     /**
-    *   Funcion para añadir
-    */
+     * Funcion para añadir
+     */
     void anadirPoblacion(Especie esp)
     {
         poblacion.add(esp.getPoblacionInicial(bioma));
@@ -302,7 +317,7 @@ public class Ecosistema
                 aux += "Montaña";
                 break;
         }
-        aux += "\n" + poblacion +"\n"+variacion+ "\n\n";
+        aux += "\n" + poblacion + "\n" + variacion + "\n\n";
         for (int i = 0; i < matrizCrecimiento.size(); i++) {
             aux += matrizCrecimiento.get(i) + "\n";
         }

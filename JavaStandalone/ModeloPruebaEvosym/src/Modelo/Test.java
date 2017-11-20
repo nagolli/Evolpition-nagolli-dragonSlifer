@@ -192,6 +192,7 @@ public class Test
         System.out.println("Cesped:   "+p.GetPuntuacionEspecie(cesped));
         System.out.println("Acacia:   "+p.GetPuntuacionEspecie(acacia));
         System.out.println("Cebra:    "+p.GetPuntuacionEspecie(cebra));
+        System.out.println("Grillo:   "+p.GetPuntuacionEspecie(grillo));
         System.out.println("Mono:     "+p.GetPuntuacionEspecie(mono));
         System.out.println("Leon:     "+p.GetPuntuacionEspecie(leon));
         System.out.println("Jirafa:   "+p.GetPuntuacionEspecie(jirafa));
