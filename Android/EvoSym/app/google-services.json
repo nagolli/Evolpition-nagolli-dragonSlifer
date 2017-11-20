@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1017646067071",
+    "firebase_url": "https://evosym-a82e3.firebaseio.com",
+    "project_id": "evosym-a82e3",
+    "storage_bucket": "evosym-a82e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017646067071:android:502c19f3e8024315",
+        "android_client_info": {
+          "package_name": "evosymgame.evosym"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017646067071-ftfkj4feeoonjd99oqje1287dbmdkvjv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "evosymgame.evosym",
+            "certificate_hash": "30615a3a779308a14d0a21f1f4a5f4aabbb6372e"
+          }
+        },
+        {
+          "client_id": "1017646067071-j9j5irt8tirf8vd7ff9jle51ha6s835a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8j8nFCrsJ_2I_SpZIc2-ZzB4eEt_Awbs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017646067071-j9j5irt8tirf8vd7ff9jle51ha6s835a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
