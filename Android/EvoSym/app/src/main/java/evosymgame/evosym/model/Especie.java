@@ -5,6 +5,9 @@
  */
 package evosymgame.evosym.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
@@ -12,7 +15,7 @@ import java.util.ArrayList;
  *
  * @author Ignacio
  */
-public class Especie
+public class Especie  implements Parcelable
 {
 
     private String nombre;
@@ -33,9 +36,58 @@ public class Especie
     private int alimDadoB;		//Indica cuanto alimento da al dar alimento secundario
     private int crecB;			//Indica cuanto crece por simbiosis
 
-    private final ArrayList<Integer> Entorno;	//A mayor entorno, menor probabilidad de muerte natural en ese bioma// funcion: =1/((x+1)^3)
+    private ArrayList<Integer> Entorno;	//A mayor entorno, menor probabilidad de muerte natural en ese bioma// funcion: =1/((x+1)^3)
 
     //Funciones de equilibrio
+
+    protected Especie(Parcel in) {
+        nombre = in.readString();
+        puntosRest = in.readInt();
+        probReproduccion = in.readInt();
+        camada = in.readFloat();
+        combate = in.readInt();
+        caza = in.readInt();
+        defensa = in.readInt();
+        tamano = in.readInt();
+        alimRequerido = in.readInt();
+        alimDado = in.readInt();
+        alimDadoB = in.readInt();
+        crecB = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(nombre);
+        dest.writeInt(puntosRest);
+        dest.writeInt(probReproduccion);
+        dest.writeFloat(camada);
+        dest.writeInt(combate);
+        dest.writeInt(caza);
+        dest.writeInt(defensa);
+        dest.writeInt(tamano);
+        dest.writeInt(alimRequerido);
+        dest.writeInt(alimDado);
+        dest.writeInt(alimDadoB);
+        dest.writeInt(crecB);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Especie> CREATOR = new Creator<Especie>() {
+        @Override
+        public Especie createFromParcel(Parcel in) {
+            return new Especie(in);
+        }
+
+        @Override
+        public Especie[] newArray(int size) {
+            return new Especie[size];
+        }
+    };
+
     /**
      * Calcula la puntuacion dada por esta especie
      *

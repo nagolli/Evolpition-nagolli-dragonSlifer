@@ -1,5 +1,8 @@
 package evosymgame.evosym.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
@@ -9,8 +12,7 @@ import java.util.ArrayList;
  * El planeta es el contenedor de todos los ecosistemas y especies, a la hora de jugar esta clase es con la que se interactua
  * 
  */
-public class Planeta
-{
+public class Planeta implements Parcelable {
 
     private ArrayList<Ecosistema> ecosistemas;
     private ArrayList<Especie> especies;
@@ -38,6 +40,30 @@ public class Planeta
             }
         }
     }
+
+    protected Planeta(Parcel in) {
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Planeta> CREATOR = new Creator<Planeta>() {
+        @Override
+        public Planeta createFromParcel(Parcel in) {
+            return new Planeta(in);
+        }
+
+        @Override
+        public Planeta[] newArray(int size) {
+            return new Planeta[size];
+        }
+    };
 
     /**
      * Añade una especie al planeta, modificando las matrices de poblacion de todos los ecosistemas y inicializando las poblaciones de los ecosistemas donde vaya a habitar

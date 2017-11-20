@@ -1,5 +1,8 @@
 package evosymgame.evosym.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
@@ -9,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author Ignacio
  */
-public class Ecosistema
+public class Ecosistema  implements Parcelable
 {
 
     private ArrayList<Especie> especies;
@@ -33,6 +36,32 @@ public class Ecosistema
         this.bioma = num;
         matrizCrecimiento = new ArrayList();
     }
+
+    protected Ecosistema(Parcel in) {
+        bioma = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(bioma);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Ecosistema> CREATOR = new Creator<Ecosistema>() {
+        @Override
+        public Ecosistema createFromParcel(Parcel in) {
+            return new Ecosistema(in);
+        }
+
+        @Override
+        public Ecosistema[] newArray(int size) {
+            return new Ecosistema[size];
+        }
+    };
 
     /**
      * Funcion para recrear toda la matriz de crecimiento
