@@ -77,4 +77,51 @@ public class DatabaseConnector {
         return data;
     }
 
+    public boolean contains(final Object o, String collection){
+        return contains(o, collection,"none");
+    }
+
+    public boolean contains(final Object o, String collection, final String objectConversion){
+        final boolean[] retval = {false};
+        db.collection(collection)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(DocumentSnapshot document : task.getResult()){
+                                if(document.toObject(Object.class) == o){
+                                    retval[0] = true;
+                                } else{
+                                    switch (objectConversion){
+                                        case Constants.ClassMejora:
+                                            Mejora aux1 = document.toObject(Mejora.class);
+                                            Mejora aux2 = (Mejora)o;
+                                            if(aux1.similar(aux2)){
+                                                retval[0] = true;
+                                            }
+                                            break;
+                                        case Constants.ClassEspecie:
+
+                                            break;
+                                        case Constants.ClassEcosistema:
+
+                                            break;
+                                        case Constants.ClassMejoras:
+
+                                            break;
+                                        case Constants.ClassPlaneta:
+
+                                            break;
+                                        case Constants.ClassUserData:
+
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+        return retval[0];
+    }
 }

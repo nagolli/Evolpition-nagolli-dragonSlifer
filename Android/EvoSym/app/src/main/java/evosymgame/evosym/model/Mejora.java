@@ -214,4 +214,22 @@ public final class Mejora
     {
         return this.nombre;
     }
+
+    public boolean similar(Mejora aux2) {
+        return(this.nombre              == aux2.nombre &&
+                this.flagRequerida      == aux2.flagRequerida &&
+                this.coste              == aux2.coste &&
+                this.flag               == aux2.flag &&
+                this.probReproduccion   == aux2.probReproduccion &&
+                this.camada             == aux2.camada &&
+                this.combate            == aux2.combate &&
+                this.caza               == aux2.caza &&
+                this.defensa            == aux2.defensa &&
+                this.tamano             == aux2.tamano &&
+                this.alimRequerido      == aux2.alimRequerido &&
+                this.alimDado           == aux2.alimDado &&
+                this.alimDadoB          == aux2.alimDadoB &&
+                this.crecB              == aux2.crecB &&
+                this.maximoVeces        == aux2.maximoVeces);
+    }
 }

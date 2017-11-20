@@ -14,12 +14,22 @@ public class DataController {
     }
 
     public void recoverAbilities (){
-        ArrayList<MapMod> data = databaseConnector.retrieveData("mejoras");
+        ArrayList<MapMod> data = databaseConnector.retrieveData(Constants.CollectionMejora);
         ArrayList<Mejora> mejoras = new ArrayList<>();
         for(MapMod d : data){
             mejoras.add((Mejora) d.map);
         }
         Mejoras m = new Mejoras();
         m.setLista(mejoras);
+    }
+
+    public void printAbilities(){
+        ArrayList<Mejora> mejoras = (new Mejoras().GetTodo());
+
+        for(Object m : mejoras){
+            if(!databaseConnector.contains(m,Constants.CollectionMejora)){
+
+            }
+        }
     }
 }
