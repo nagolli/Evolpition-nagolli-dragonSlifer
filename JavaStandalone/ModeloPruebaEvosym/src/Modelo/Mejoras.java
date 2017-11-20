@@ -88,7 +88,7 @@ public class Mejoras
         lista.add(new Mejora(29, 3, 1, 17, 3, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 1, 1, 1, 1, 0, 0, "Hoja Perenne"));
         lista.add(new Mejora(30, 1, 2, 15, 11, 5, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Manada"));
         lista.add(new Mejora(31, 3, 0, -1, 0, 0, 0, 0, 0, -1, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Metabolismo lento"));
-        lista.add(new Mejora(32, 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Muy Pequeño"));
+        lista.add(new Mejora(32, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Muy Pequeño"));
         lista.add(new Mejora(33, 3, 0, -2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Necesita mucho alimento"));
         lista.add(new Mejora(34, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Necesita Poco alimento"));
         lista.add(new Mejora(35, 1, 10, 10, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Nido"));

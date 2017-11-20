@@ -47,6 +47,7 @@ public class Test
         cesped.addMejora(Mejoras.GetId(9));
         cesped.addMejora(Mejoras.GetId(9));
         cesped.addMejora(Mejoras.GetId(58));
+        cesped.addMejora(Mejoras.GetId(59));
         cesped.finEditar();
         p.AddEspecie(cesped);
         
@@ -80,6 +81,7 @@ public class Test
         cebra.addMejora(Mejoras.GetId(45));
         cebra.addMejora(Mejoras.GetId(14));
         cebra.addMejora(Mejoras.GetId(34));
+        cebra.addMejora(Mejoras.GetId(60));
         cebra.finEditar();
         p.AddEspecie(cebra);
         
