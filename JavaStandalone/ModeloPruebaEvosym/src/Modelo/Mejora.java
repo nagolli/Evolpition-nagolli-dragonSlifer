@@ -35,6 +35,7 @@ public final class Mejora
     private final int maximoVeces;
 
     private final ArrayList<Integer> Entorno;
+    private final int costeCompra;
 
     /**
      * Crea una mejora
@@ -62,8 +63,9 @@ public final class Mejora
      * @param adaptundra Modificador de entorno para el bioma tundra
      * @param adapmontaña Modificador de entorno para el bioma montaña
      * @param nombre Nombre de la mejora
+     * @param costeCompra Coste para que un jugador adquiera esta mejora para sus especies
      */
-    public Mejora(int id, int maximoVeces, int flagRequerida, int coste, int flag, int probReproduccion, float camada, int combate, int caza, int defensa, int tamano, int alimRequerido, int alimDado, int alimDadoB, int crecB, int adapsalada, int adapdulce, int adapllanura, int adapbosque, int adapjungla, int adapdesierto, int adaptundra, int adapmontaña, String nombre)
+    public Mejora(int id, int maximoVeces, int flagRequerida, int coste, int flag, int probReproduccion, float camada, int combate, int caza, int defensa, int tamano, int alimRequerido, int alimDado, int alimDadoB, int crecB, int adapsalada, int adapdulce, int adapllanura, int adapbosque, int adapjungla, int adapdesierto, int adaptundra, int adapmontaña, int costeCompra, String nombre)
     {
         this.maximoVeces = maximoVeces;
         this.id = id;
@@ -90,6 +92,7 @@ public final class Mejora
         this.Entorno.add(adapdesierto);
         this.Entorno.add(adaptundra);
         this.Entorno.add(adapmontaña);
+        this.costeCompra=costeCompra;
     }
 
     /**
@@ -195,6 +198,17 @@ public final class Mejora
     {
         return this.nombre;
     }
+
+    /**
+     * Devuelve el coste de compra de la mejora
+     *
+     * @return coste de la mejora para el jugador
+     */
+    public int getCosteCompra()
+    {
+        return costeCompra;
+    }
+
 
     @Override
     public String toString()
